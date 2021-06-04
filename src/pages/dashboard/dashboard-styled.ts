@@ -60,7 +60,6 @@ export const TaskStyled = styled.div`
 	border-radius: 10px;
 	min-height: 60px;
 	cursor: pointer;
-	transition: 0.15s;
 	color: #04051f;
 
 	:not(:last-child) {

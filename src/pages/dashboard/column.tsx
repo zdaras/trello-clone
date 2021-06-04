@@ -12,6 +12,13 @@ import TaskModal from './task-modal';
 
 import { ColumnAddButton, TaskStyled, TaskTitle, TaskPriority, ColumnStyled } from './dashboard-styled';
 
+function getStyle(style: any, snapshot: any) {
+	if (!snapshot.isDropAnimating) {
+		return style;
+	}
+	return { ...style, transitionDuration: '0.001s' };
+}
+
 export const Column: FC<IProps> = ({ column, tasks, getTasks }) => {
 	const { t } = useTranslation();
 	const defaultValues = { priority: null };
@@ -31,12 +38,12 @@ export const Column: FC<IProps> = ({ column, tasks, getTasks }) => {
 
 						{tasks.map((task, index) => (
 							<Draggable key={task.id} draggableId={task.id} index={index}>
-								{providedDraggable => (
+								{(providedDraggable, snapshot) => (
 									<TaskStyled
 										ref={providedDraggable.innerRef}
 										{...providedDraggable.draggableProps}
 										{...providedDraggable.dragHandleProps}
-										style={{ ...providedDraggable.draggableProps.style }}
+										style={getStyle(providedDraggable.draggableProps.style, snapshot)}
 										onClick={() => handleEdit(task)}
 									>
 										<TaskTitle>{task.name}</TaskTitle>
