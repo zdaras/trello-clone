@@ -7,7 +7,7 @@ export const BoardContainer = styled.div`
 	min-height: 100%;
 	overflow: hidden;
 	position: relative;
-	padding: 30px 2%;
+	padding: 30px 2% 0;
 `;
 
 export const BoardTopPanel = styled.div`
@@ -29,7 +29,7 @@ export const ColumnsContainer = styled.div`
 `;
 
 export const ColumnStyled = styled.div`
-	padding: 10px 10px 50px;
+	padding: 10px;
 	height: max-content;
 	width: 300px;
 	flex: 0 0 300px;
@@ -37,6 +37,7 @@ export const ColumnStyled = styled.div`
 	background-color: #efefef;
 	border-radius: 2px;
 	overflow-y: auto;
+	max-height: calc(100vh - 114px - 30px - 50px); // - header - board padding - board top panel
 
 	:not(:last-child) {
 		margin-right: 15px;
@@ -44,17 +45,21 @@ export const ColumnStyled = styled.div`
 `;
 
 export const ColumnAddButton = styled.div`
-	position: absolute;
-	bottom: 0;
+	height: 40px;
 `;
 
 export const TaskStyled = styled.div`
 	padding: 10px 12px;
 	background-color: #fffbfb;
 	border-radius: 10px;
-	min-height: 84px;
+	min-height: 60px;
 	cursor: pointer;
 	transition: 0.15s;
+	color: #04051f;
+
+	:not(:last-child) {
+		margin-bottom: 15px;
+	}
 
 	:hover {
 		background-color: #f9f9f9;

@@ -10,7 +10,7 @@ const LoadingContainer = styled.div`
 	top: 0;
 	left: 0;
 	z-index: 2;
-	background: linear-gradient(to bottom, #e9e4f0, #d3cce3);
+	background: ${({ theme }) => theme.BG_COLOR};
 `;
 
 const buttonLoader = keyframes`

@@ -45,7 +45,7 @@ export const Dashboard = () => {
 					{columns.map((item, index) => {
 						const filteredTasks = sortByIndex(tasks.filter(i => i.columnId === item.id));
 
-						return <Column key={item.id} column={item} tasks={filteredTasks} index={index} />;
+						return <Column key={item.id} column={item} tasks={filteredTasks} index={index} getTasks={getTasks} />;
 					})}
 				</ColumnsContainer>
 			</BoardContainer>

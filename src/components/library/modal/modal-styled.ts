@@ -45,12 +45,12 @@ export const ModalBackgroundStyled = styled.div<IModalProps>`
 `;
 
 export const ModalBody = styled.div<IModalProps>`
-  position: absolute;
-  max-height: calc(94vh - 2.5rem);
-  overflow: ${props => props.overflow || 'auto'};
-  padding: 55px;
-  background-color: ${props => props.theme.MODAL_BG};
-  border-radius: 2rem;
+	position: absolute;
+	max-height: calc(94vh - 2.5rem);
+	overflow: ${props => props.overflow || 'auto'};
+	padding: 55px;
+	background-color: ${props => props.theme.MODAL_BG};
+	border-radius: 12px;
 	overflow-x: hidden;
 	-webkit-mask-image: radial-gradient(circle, white 100%, black 100%);
 	scrollbar-width: thin;
@@ -60,8 +60,7 @@ export const ModalBody = styled.div<IModalProps>`
     background: transparent; 
 	} */
 
-
-  ${({ size }) => {
+	${({ size }) => {
 		switch (size) {
 			case 'small':
 				return css`
@@ -103,7 +102,7 @@ export const ModalBody = styled.div<IModalProps>`
 		}
 	}}
 
-  transform: ${props => {
+	transform: ${props => {
 		switch (props.fadeType) {
 			case 'in':
 				return 'scale(1)';
@@ -112,7 +111,7 @@ export const ModalBody = styled.div<IModalProps>`
 		}
 	}};
 
-  transition: ${props => {
+	transition: ${props => {
 		switch (props.fadeType) {
 			case 'in':
 				return 'transform 0.15s';
@@ -123,13 +122,13 @@ export const ModalBody = styled.div<IModalProps>`
 		}
 	}};
 
-  @media (max-width: 776px) {
-    width: 95%;
+	@media (max-width: 776px) {
+		width: 95%;
 		min-width: auto;
-    max-height: 80%;
+		max-height: 80%;
 		padding: 28px;
 		overflow: auto;
-  }
+	}
 `;
 
 export const ModalTopPanel = styled.div<{ centerTitle?: boolean }>`
