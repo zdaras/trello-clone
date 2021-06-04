@@ -11,10 +11,6 @@ export const HeaderStyled = styled.header`
 
 export const HeaderLeftMenu = styled.div`
 	display: flex;
-
-	button {
-		margin-right: 30px;
-	}
 `;
 
 export const UserIconStyled = styled.span`

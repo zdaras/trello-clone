@@ -1,15 +1,16 @@
-import { IColumn } from '@/types/models';
+import { IGetAllColumnsValidator, IGetAllColumns, IColumn } from '@/types/models';
 import { sortByIndex } from '@/utils/helpers';
+import { decode } from '@/utils/io-ts';
 
 import { columnsCollection } from './index';
 
 const getAll = async () => {
 	const querySnapshot: any = await columnsCollection.get();
-	const data: IColumn[] = [];
+	const data: IGetAllColumns = [];
 	querySnapshot.forEach((doc: any) => {
 		data.push({ id: doc.id, ...doc.data() });
 	});
-	return sortByIndex(data);
+	return decode<IGetAllColumns>(IGetAllColumnsValidator, sortByIndex(data));
 };
 
 const create = async (data: IColumn) => {

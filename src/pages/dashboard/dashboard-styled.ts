@@ -73,6 +73,10 @@ export const TaskPriority = styled.small<{ priority: ITask['priority'] }>`
 		switch (priority) {
 			case 'low':
 				return '#efefef';
+			case 'medium':
+				return '#fff3c9';
+			case 'high':
+				return '#ffb3b3';
 			default:
 				return '#efefef';
 		}

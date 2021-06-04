@@ -1,14 +1,15 @@
-import { ITask } from '@/types/models';
+import { IGetAllTasksValidator, IGetAllTasks, ITask } from '@/types/models';
+import { decode } from '@/utils/io-ts';
 
 import { tasksCollection } from './index';
 
 const getAll = async () => {
 	const querySnapshot: any = await tasksCollection.get();
-	const data: ITask[] = [];
+	const data: IGetAllTasks = [];
 	querySnapshot.forEach((doc: any) => {
 		data.push({ id: doc.id, ...doc.data() });
 	});
-	return data;
+	return decode<IGetAllTasks>(IGetAllTasksValidator, data);
 };
 
 const create = async (data: ITask) => {

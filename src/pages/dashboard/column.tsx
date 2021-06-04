@@ -16,7 +16,7 @@ export const Column: FC<IProps> = ({ column, tasks }) => {
 			{tasks.map(task => (
 				<TaskStyled key={task.id}>
 					<TaskTitle>{task.name}</TaskTitle>
-					<TaskPriority priority={task.priority}>{task.priority}</TaskPriority>
+					{task.priority && <TaskPriority priority={task.priority}>{task.priority}</TaskPriority>}
 				</TaskStyled>
 			))}
 			<ColumnAddButton>
