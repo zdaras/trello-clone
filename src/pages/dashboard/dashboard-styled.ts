@@ -28,6 +28,10 @@ export const ColumnsContainer = styled.div`
 	position: relative;
 `;
 
+export const ColumnWrapper = styled.div`
+	position: relative;
+`;
+
 export const ColumnStyled = styled.div`
 	padding: 10px;
 	height: max-content;
@@ -37,6 +41,7 @@ export const ColumnStyled = styled.div`
 	background-color: #efefef;
 	border-radius: 2px;
 	overflow-y: auto;
+	overflow-x: hidden;
 	max-height: calc(100vh - 114px - 30px - 50px); // - header - board padding - board top panel
 
 	:not(:last-child) {
@@ -46,6 +51,7 @@ export const ColumnStyled = styled.div`
 
 export const ColumnAddButton = styled.div`
 	height: 40px;
+	background-color: #efefef;
 `;
 
 export const TaskStyled = styled.div`

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { DragDropContext } from 'react-beautiful-dnd';
 
 import Helmet from '@/components/shared/helmet';
 import Button from '@/components/library/button';
@@ -27,13 +28,66 @@ export const Dashboard = () => {
 		setTasks(data);
 	};
 
+	const onDragEnd = async (result: any) => {
+		const { source, destination } = result;
+		const sourceColumnId = source.droppableId;
+		const destinationColumnId = destination.droppableId;
+
+		// dropped outside the list
+		if (!destination) {
+			return;
+		}
+
+		const sourceTask = tasks.find(i => i.index === source.index && i.columnId === sourceColumnId);
+		const replacedTask = tasks.find(i => i.index === destination.index && i.columnId === destinationColumnId);
+
+		// same  column
+		if (sourceColumnId === destinationColumnId) {
+			if (sourceTask && replacedTask) {
+				const updatedSourceTrack = { ...sourceTask, columnId: destinationColumnId, index: destination.index };
+				const updatedReplacedTrack = { ...replacedTask, columnId: sourceColumnId, index: source.index };
+				setTasks(prev => {
+					const removed = prev.filter(i => ![sourceTask.id, replacedTask.id].includes(i.id));
+					const newTasks = [updatedSourceTrack, updatedReplacedTrack, ...removed];
+
+					return newTasks;
+				});
+				await tasksService.update(sourceTask.id, { columnId: destinationColumnId, index: destination.index });
+				await tasksService.update(replacedTask.id, { columnId: sourceColumnId, index: source.index });
+			}
+		} else {
+			// different column
+			if (sourceTask) {
+				const updatedSourceTrack = { ...sourceTask, columnId: destinationColumnId, index: destination.index };
+				setTasks(prev => {
+					const removed = prev.filter(i => ![sourceTask.id].includes(i.id));
+					const newTasks = [updatedSourceTrack, ...removed];
+
+					return newTasks;
+				});
+				await tasksService.update(sourceTask.id, { columnId: destinationColumnId, index: destination.index });
+			}
+			if (replacedTask) {
+				const updatedReplacedTrack = { ...replacedTask, columnId: sourceColumnId, index: source.index };
+				setTasks(prev => {
+					const removed = prev.filter(i => ![replacedTask.id].includes(i.id));
+					const newTasks = [updatedReplacedTrack, ...removed];
+
+					return newTasks;
+				});
+				await tasksService.update(replacedTask.id, { columnId: destinationColumnId, index: source.index + 1 });
+			}
+		}
+		await getTasks();
+	};
+
 	useEffect(() => {
 		getColumns();
 		getTasks();
 	}, []);
 
 	return (
-		<>
+		<DragDropContext onDragEnd={onDragEnd}>
 			<Helmet title={t('Dashboard')} />
 
 			<BoardContainer>
@@ -49,7 +103,7 @@ export const Dashboard = () => {
 					})}
 				</ColumnsContainer>
 			</BoardContainer>
-		</>
+		</DragDropContext>
 	);
 };
 

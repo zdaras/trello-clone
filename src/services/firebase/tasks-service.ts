@@ -4,7 +4,7 @@ import { decode } from '@/utils/io-ts';
 import { tasksCollection } from './index';
 
 const getAll = async () => {
-	const querySnapshot: any = await tasksCollection.get();
+	const querySnapshot: any = await tasksCollection.orderBy('index', 'asc').get();
 	const data: IGetAllTasks = [];
 	querySnapshot.forEach((doc: any) => {
 		data.push({ id: doc.id, ...doc.data() });

@@ -228,6 +228,7 @@ module.exports = {
 		'jsx-a11y/no-noninteractive-element-interactions': 0,
 		'lines-between-class-members': 'off',
 		'no-nested-ternary': 0,
+		'no-useless-return': 0,
 		camelcase: 0,
 		'@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
 		'no-useless-escape': 0,
