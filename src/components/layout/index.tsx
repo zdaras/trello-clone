@@ -12,8 +12,8 @@ export const MainLayout: FC = ({ children }) => (
 	<Container>
 		<MainContainer>
 			<Header />
-			<WrapperStyled>{children}</WrapperStyled>
 		</MainContainer>
+		<WrapperStyled>{children}</WrapperStyled>
 	</Container>
 );
 

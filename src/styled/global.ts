@@ -13,6 +13,8 @@ export const GlobalStyle = createGlobalStyle`
   body {
     margin: 0;
     height: 100%;
+    background: ${props => props.theme.BG_COLOR};
+    transition: 0.2s ease-in-out;
   }
 
   * {
@@ -61,7 +63,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   h5 {
-    margin-bottom: 4px;
+    margin-bottom: 12px;
   }
 
   hr {

@@ -6,6 +6,7 @@ export const HeaderStyled = styled.header`
 	justify-content: space-between;
 	transition: all 0.2s;
 	padding: 30px 0;
+	height: 114px;
 `;
 
 export const HeaderLeftMenu = styled.div`

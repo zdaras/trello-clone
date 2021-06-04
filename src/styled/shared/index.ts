@@ -3,11 +3,10 @@ import styled, { css } from 'styled-components';
 import { responsive } from '@/styled/responsive';
 
 export const WrapperStyled = styled.section`
-	min-height: 100%;
+	min-height: calc(100% - 114px); // header height
 	transition: all 0.2s;
 	flex: 1 1 auto;
 	position: relative;
-	padding-bottom: 3rem;
 `;
 
 export const RouteWrapperStyled = styled.div`
@@ -205,8 +204,8 @@ export const H5 = styled.h5<IH>`
 	font-size: 1rem;
 	line-height: 1.125rem;
 	letter-spacing: 0.16px;
+	font-weight: 600;
 	color: ${props => props.theme.SECONDARY_FONT_COLOR};
-	font-weight: normal;
 	opacity: ${props => props.opacity || '0.6'};
 
 	${({ padding }) =>

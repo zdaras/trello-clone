@@ -13,7 +13,7 @@ export const themes = {
 		GREEN: '#3CA857',
 		YELLOW: '#F5B308',
 		// THEME
-		BG_COLOR: 'linear-gradient(to bottom, #e9e4f08f, #d3cce3ad)',
+		BG_COLOR: '#d3cce3ad',
 		HEADER_BG: '#f1f1f1',
 		SIDEBAR_BG: '#fff',
 		BLOCK_BG: '#fff',
@@ -83,7 +83,7 @@ export const themes = {
 		GREEN: '#3CA857',
 		YELLOW: '#F5B308',
 		// THEME
-		BG_COLOR: 'linear-gradient(to top, #141e30, #243b55)',
+		BG_COLOR: '#243b55',
 		HEADER_BG: '#b4cee8',
 		SIDEBAR_BG: '#fff',
 		BLOCK_BG: '#fff',

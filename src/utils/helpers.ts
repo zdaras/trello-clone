@@ -6,6 +6,8 @@ export const isDev = process.env.NODE_ENV === 'development';
 
 export const { t } = i18n;
 
+export const sortByIndex = (data: any[]) => data.sort((a, b) => (a.index > b.index ? 1 : -1));
+
 export const randomInt = (min = 0, max = 100000) => Math.floor(Math.random() * (max - min + 1) + min);
 
 export const capitalize = (s: string, lowercase = true) => {
