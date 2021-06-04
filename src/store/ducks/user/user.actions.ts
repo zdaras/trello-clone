@@ -1,64 +1,44 @@
 import { ThunkA } from '@/types';
-import {
-	ILoginParams,
-	IRegisterParams,
-	IUpdateUserInfoParams,
-	IRecoverPasswordParams
-} from '@/services/api/user/types';
+import { ILoginParams, IRecoverPasswordParams, IRegisterParams } from '@/services/api/user/types';
 import Api from '@/services/api';
-import { setAuthHeader, deleteAuthHeader } from '@/services/api/axios';
-import storage from '@/utils/storage';
-import { toastActions } from '@/store/ducks/toast';
+import { auth } from '@/services/firebase';
 import app, { appActions } from '@/store/ducks/app';
+import { toastActions } from '@/store/ducks/toast';
 
 import user from '.';
 
 export const logout = (): ThunkA => async dispatch => {
-	const logoutParams = { refresh_token: storage('refresh_token').get() };
-	Api.user.logout(logoutParams);
+	await auth.signOut();
 	dispatch(user.actions.logoutAction());
-	deleteAuthHeader();
-	dispatch(appActions.routerPush('/login'));
 	dispatch(app.actions.clearAlerts());
 };
 
-export const getCurrentUser = (setHeader = true): ThunkA => async dispatch => {
+export const getCurrentUser = (): ThunkA => async dispatch => {
 	try {
 		dispatch(user.actions.loginStartAction());
-		const access_token: string = storage('access_token').get();
-		const refresh_token: string = storage('refresh_token').get();
-		const data = await Api.user.currentUser(access_token);
-		if (setHeader) await setAuthHeader({ access_token, refresh_token });
-		dispatch(user.actions.loginSuccessAction(data));
+		const data = auth.currentUser;
+		if (data) {
+			dispatch(user.actions.loginSuccessAction(data as any));
+		} else {
+			dispatch(logout());
+		}
 	} catch (e) {
 		dispatch(logout());
 	}
 };
 
-export const login = (params: ILoginParams): ThunkA => async dispatch => {
+export const login = (p: ILoginParams): ThunkA => async () => {
 	try {
-		const res = await Api.user.login(params);
-		await setAuthHeader(res);
-		dispatch(getCurrentUser(false));
-		return Promise.resolve(res);
+		await auth.signInWithEmailAndPassword(p.username, p.password);
+		return Promise.resolve();
 	} catch (e) {
 		return Promise.reject(e);
 	}
 };
 
-export const register = (params: IRegisterParams): ThunkA<Promise<string>> => async () => {
+export const register = (p: IRegisterParams): ThunkA => async () => {
 	try {
-		const res = await Api.user.register(params);
-		return Promise.resolve(res);
-	} catch (e) {
-		return Promise.reject(e);
-	}
-};
-
-export const updateUserInfo = (params: IUpdateUserInfoParams): ThunkA => async dispatch => {
-	try {
-		await Api.user.updateUserInfo(params);
-		dispatch(user.actions.updateInfo(params));
+		await auth.createUserWithEmailAndPassword(p.username, p.password);
 		return Promise.resolve();
 	} catch (e) {
 		return Promise.reject(e);

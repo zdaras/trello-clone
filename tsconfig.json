@@ -10,6 +10,7 @@
 			"@components/*": ["src/components/*"],
 			"@pages/*": ["src/pages/*"]
 		},
+		"isolatedModules": false,
 		"strict": true,
 		"skipLibCheck": true,
 		"allowSyntheticDefaultImports": true,

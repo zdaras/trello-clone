@@ -3,6 +3,16 @@ import styled, { css, keyframes } from 'styled-components';
 
 import { Flex } from '@/styled/flex';
 
+const LoadingContainer = styled.div`
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 2;
+	background: linear-gradient(to bottom, #e9e4f0, #d3cce3);
+`;
+
 const buttonLoader = keyframes`
   0% {
     -webkit-transform: rotate(0deg);
@@ -29,9 +39,11 @@ export const Loading = styled.div<{ width?: string; height?: string; margin?: st
 `;
 
 export const LoadingLarge: FC<IProps> = ({ loading }) => (
-	<Flex center full height="100vh">
-		{loading && <Loading />}
-	</Flex>
+	<LoadingContainer>
+		<Flex center full height="100vh">
+			{loading && <Loading />}
+		</Flex>
+	</LoadingContainer>
 );
 
 interface IProps {

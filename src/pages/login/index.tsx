@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { FormContext, useForm } from 'react-hook-form';
-import { useLocation } from 'react-router-dom';
 
 import { FormInput, ErrorText } from '@/components/form';
 import { Link } from '@components/library/link';
@@ -14,24 +13,13 @@ import { required } from '@/utils/validator';
 import { userActions } from '@/store/ducks/user';
 import useActions from '@/hooks/useActions';
 import useFormError from '@/hooks/useFormError';
-import useToast from '@/hooks/useToast';
 import { ILoginParams } from '@/services/api/user/types';
-import { qs } from '@/utils/helpers';
 
 export const Login = () => {
 	const { t } = useTranslation();
-	const queryParams = qs.parse(useLocation().search); // { emailVerified: any }
 	const methods = useForm<ILoginParams>();
 	const login = useActions(userActions.login);
-	const { toast } = useToast();
 	const { formError, setFormError } = useFormError();
-
-	useEffect(() => {
-		if (String(queryParams.emailVerified) === 'true') toast.success('Your email was confirmed', { timeout: 10000 });
-		if (String(queryParams.emailVerified) === 'false') {
-			toast.warning('Your email maybe already confirmed', { timeout: 10000 });
-		}
-	}, []);
 
 	const onSubmit = async (values: ILoginParams) => {
 		try {
@@ -62,11 +50,6 @@ export const Login = () => {
 										name="password"
 										type="password"
 										label={t('Enter Password')}
-										AbsoluteComp={
-											<Link to="/forgot-password">
-												<Button buttonType="text" text={t('Forgot?')} padding="4px" />
-											</Link>
-										}
 										validate={required}
 										margin="0 0 10px"
 									/>
