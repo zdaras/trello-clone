@@ -8,6 +8,18 @@ export const { t } = i18n;
 
 export const sortByIndex = (data: any[]) => data.sort((a, b) => (a.index > b.index ? 1 : -1));
 
+export const arrayMove = (ar: any[], fromIndex: number, toIndex: number) => {
+	ar.splice(toIndex, 0, ar.splice(fromIndex, 1)[0]);
+};
+
+export const transformTasksByColumns = (data: any[] = []) => {
+	const newData: any = {};
+	data.forEach(item => {
+		newData[item.columnId] = [...(newData[item.columnId] || []), item];
+	});
+	return newData;
+};
+
 export const randomInt = (min = 0, max = 100000) => Math.floor(Math.random() * (max - min + 1) + min);
 
 export const capitalize = (s: string, lowercase = true) => {

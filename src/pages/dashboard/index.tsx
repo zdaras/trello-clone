@@ -8,7 +8,7 @@ import columnsService from '@/services/firebase/columns-service';
 import tasksService from '@/services/firebase/tasks-service';
 import { H4 } from '@/styled/shared';
 import { IColumn, ITask } from '@/types/models';
-import { sortByIndex } from '@/utils/helpers';
+import { arrayMove, transformTasksByColumns } from '@/utils/helpers';
 
 import { BoardContainer, BoardTopPanel, ColumnsContainer } from './dashboard-styled';
 import Column from './column';
@@ -16,7 +16,7 @@ import Column from './column';
 export const Dashboard = () => {
 	const { t } = useTranslation();
 	const [columns, setColumns] = useState<IColumn[]>([]);
-	const [tasks, setTasks] = useState<ITask[]>([]);
+	const [tasks, setTasks] = useState<Record<string, ITask[]>>({});
 
 	const getColumns = async () => {
 		const data = await columnsService.getAll();
@@ -25,60 +25,37 @@ export const Dashboard = () => {
 
 	const getTasks = async () => {
 		const data = await tasksService.getAll();
-		setTasks(data);
+		setTasks(transformTasksByColumns(data));
 	};
 
 	const onDragEnd = async (result: any) => {
 		const { source, destination } = result;
 		const sourceColumnId = source.droppableId;
 		const destinationColumnId = destination.droppableId;
+		const sourceList = tasks[sourceColumnId] || [];
+		const destList = tasks[destinationColumnId] || [];
 
-		// dropped outside the list
-		if (!destination) {
-			return;
-		}
+		if (!destination) return; // dropped outside the list
 
-		const sourceTask = tasks.find(i => i.index === source.index && i.columnId === sourceColumnId);
-		const replacedTask = tasks.find(i => i.index === destination.index && i.columnId === destinationColumnId);
-
-		// same  column
+		// same column
 		if (sourceColumnId === destinationColumnId) {
-			if (sourceTask && replacedTask) {
-				const updatedSourceTrack = { ...sourceTask, columnId: destinationColumnId, index: destination.index };
-				const updatedReplacedTrack = { ...replacedTask, columnId: sourceColumnId, index: source.index };
-				setTasks(prev => {
-					const removed = prev.filter(i => ![sourceTask.id, replacedTask.id].includes(i.id));
-					const newTasks = [updatedSourceTrack, updatedReplacedTrack, ...removed];
-
-					return newTasks;
-				});
-				await tasksService.update(sourceTask.id, { columnId: destinationColumnId, index: destination.index });
-				await tasksService.update(replacedTask.id, { columnId: sourceColumnId, index: source.index });
-			}
+			arrayMove(destList, source.index, destination.index);
+			setTasks(prev => ({ ...prev, [destinationColumnId]: destList }));
+			destList.forEach((item, index) => {
+				tasksService.update(item.id, { columnId: destinationColumnId, index });
+			});
 		} else {
 			// different column
-			if (sourceTask) {
-				const updatedSourceTrack = { ...sourceTask, columnId: destinationColumnId, index: destination.index };
-				setTasks(prev => {
-					const removed = prev.filter(i => ![sourceTask.id].includes(i.id));
-					const newTasks = [updatedSourceTrack, ...removed];
-
-					return newTasks;
-				});
-				await tasksService.update(sourceTask.id, { columnId: destinationColumnId, index: destination.index });
-			}
-			if (replacedTask) {
-				const updatedReplacedTrack = { ...replacedTask, columnId: sourceColumnId, index: source.index };
-				setTasks(prev => {
-					const removed = prev.filter(i => ![replacedTask.id].includes(i.id));
-					const newTasks = [updatedReplacedTrack, ...removed];
-
-					return newTasks;
-				});
-				await tasksService.update(replacedTask.id, { columnId: destinationColumnId, index: source.index + 1 });
-			}
+			const draggingTask = sourceList.splice(source.index, 1);
+			destList.splice(destination.index, 0, draggingTask[0]);
+			setTasks(prev => ({ ...prev, [sourceColumnId]: sourceList, [destinationColumnId]: destList }));
+			destList.forEach((item, index) => {
+				tasksService.update(item.id, { columnId: destinationColumnId, index });
+			});
+			sourceList.forEach((item, index) => {
+				tasksService.update(item.id, { columnId: sourceColumnId, index });
+			});
 		}
-		await getTasks();
 	};
 
 	useEffect(() => {
@@ -97,7 +74,7 @@ export const Dashboard = () => {
 				</BoardTopPanel>
 				<ColumnsContainer>
 					{columns.map((item, index) => {
-						const filteredTasks = sortByIndex(tasks.filter(i => i.columnId === item.id));
+						const filteredTasks = tasks[item.id] || [];
 
 						return <Column key={item.id} column={item} tasks={filteredTasks} index={index} getTasks={getTasks} />;
 					})}
